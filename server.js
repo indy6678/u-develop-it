@@ -21,8 +21,25 @@ const db = mysql.createConnection(
     console.log('Connected to the election database.')
 );
 
-db.query(`SELECT * FROM candidates`, (err, rows) => {
-    console.log(rows);
+// // query to show all rows from db
+// db.query(`SELECT * FROM candidates`, (err, rows) => {
+//     console.log(rows);
+// });
+
+// get a single candidate
+// db.query(`SELECT * FROM candidates WHERE ID = 1`, (err, row) => {
+//     if(err) {
+//         console.log(err);
+//     }
+//     console.log(row);
+// });
+
+// delete a single candidate
+db.query(`DELETE FROM candidates WHERE id = ?`, 1, (err, result) => {
+    if(err) {
+        console.log(err);
+    }  
+    console.log(result);
 });
 
 // to test communication; comment out!
