@@ -22,11 +22,10 @@ const db = mysql.createConnection(
   console.log("Connected to the election database.")
 );
 
-// route for query
+// route for query to show all candidates/columns from db
 app.get("/api/candidates", (req, res) => {
   const sql = `SELECT * FROM candidates`;
 
-  // query to show all candidates/columns from db
   db.query(sql, (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
