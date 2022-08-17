@@ -24,7 +24,12 @@ const db = mysql.createConnection(
 
 // route for query to show all candidates/columns from db
 app.get("/api/candidates", (req, res) => {
-  const sql = `SELECT * FROM candidates`;
+  const sql = `SELECT candidates.*, parties.name 
+                AS party_name
+                FROM candidates
+                LEFT JOIN parties
+                ON candidates.party_id = parties.id`; // select all candidates, but only with the parties.name (indicated as party_name), from the candidates table, and combine it 
+                                                      //  with all rows from the parties table where the candidates' party_id matched the parties.id
 
   db.query(sql, (err, rows) => {
     if (err) {
@@ -41,7 +46,12 @@ app.get("/api/candidates", (req, res) => {
 
 // route for query to get a single candidate
 app.get("/api/candidate/:id", (req, res) => {
-  const sql = `SELECT * FROM candidates WHERE id = ?`;
+  const sql = `SELECT candidates.*, parties.name 
+               AS party_name
+               FROM candidates
+               LEFT JOIN parties
+               ON candidates.party_id = parties.id
+               WHERE id = ?`;
   const params = [req.params.id];
 
   db.query(sql, params, (err, row) => {
