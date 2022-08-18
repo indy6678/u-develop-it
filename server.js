@@ -104,11 +104,9 @@ app.get('/api/parties/:id', (req, res) => {
 app.delete("/api/candidate/:id", (req, res) => {
   const sql = `DELETE FROM candidates WHERE id = ?`;
   const params = [req.params.id];
-
   db.query(sql, params, (err, result) => {
     if (err) {
-      // console.log(err);
-      res.statusMessage(400).json({ error: res.message });
+      res.status(400).json({ error: err.message });
       // checks if anything was deleted
     } else if (!result.affectedRows) {
       // if the candidate was not found
@@ -155,6 +153,34 @@ app.post("/api/candidate", ({ body }, res) => {
       message: "success",
       data: body,
     });
+  });
+});
+
+app.put('/api/candidate/:id', (req, res) => {
+  const errors = inputCheck(req.body, 'party_id');
+  if (errors) {
+    res.status(400).json({error: errors})
+    return;
+  }
+
+  const sql = `UPDATE candidates SET party_id = ?
+              WHERE id = ?`;
+  const params = [req.body.party_id, req.params.id]
+  db.query(sql, params, (err, result) => {
+    if(err) {
+      res.status(400).json({error: err.message});
+    } else if (!result.affectedRows) {
+      res.json({
+        message: 'Candidate not found'
+      });
+    } else {
+      res.json({
+        message: 'success',
+        data: req.body,
+        changes: result.affectedRows
+      });
+      console.log("Success!");
+    }
   });
 });
 
